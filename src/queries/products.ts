@@ -28,7 +28,7 @@ export function useAvailableProduct(id?: string) {
   return useQuery<AvailableProduct, AxiosError>(
     ["product", { id }],
     async () => {
-      const res = await axios.get<AvailableProduct>(
+      const res = await axios.get<{ product: AvailableProduct }>(
         `${API_PATHS.bff}/products/${id}`
       );
       return res.data.product;
