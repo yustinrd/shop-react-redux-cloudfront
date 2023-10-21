@@ -1,5 +1,5 @@
-service: my-store-app
-
+service: my-store-app-riustin
+app: shop-react-redux-cloudfront
 frameworkVersion: "3"
 
 provider:
@@ -19,7 +19,7 @@ plugins:
 
 custom:
   client:
-    bucketName: my-store-app
+    bucketName: roman-app-bucket
     distributionFolder: dist
   s3BucketName: ${self:custom.client.bucketName}
 
@@ -36,7 +36,11 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3BucketName}
-        AccessControl: PublicRead
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: ObjectWriter
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
@@ -95,6 +99,9 @@ resources:
           ## The only exception are files that actually exist e.h. app.js, reset.css
           CustomErrorResponses:
             - ErrorCode: 404
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+            - ErrorCode: 403
               ResponseCode: 200
               ResponsePagePath: /index.html
           DefaultCacheBehavior:
